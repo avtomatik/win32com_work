@@ -6,42 +6,31 @@ import re
 from pathlib import Path
 from zipfile import ZipFile
 
-from win32com.client.dynamic import Dispatch
-from win32com.client.gencache import EnsureDispatch
-
-from archives.src.archives_manipulations import _
+from core.funcs import docx_compare
 
 
 def main():
-    PATH = 'D:'
+    PATH_SRC = '/media/green-machine/KINGSTON'
     PATH_EXP = '/media/green-machine/KINGSTON'
 
-    with ZipFile(Path(PATH).joinpath('TextReview.zip')) as archive:
+    _ = 0
+
+    ARCHIVE_NAME = 'TextReview.zip'
+
+    with ZipFile(Path(PATH_SRC).joinpath(ARCHIVE_NAME)) as archive:
         for file_name in archive.namelist():
             if not file_name.endswith('.txt'):
                 _file_name = re.sub('[ .]', '-', file_name)
                 try:
                     print(file_name)
                     archive.extract(file_name, path=PATH_EXP)
-                    Application = EnsureDispatch('Word.Application')
-                    Application = Dispatch('Word.Application')
-                    Document = Application.Documents.Add()
-                    Application.CompareDocuments(
-                        Application.Documents.Open(
-                            Path(PATH_EXP).joinpath(file_name)),
-                        Application.Documents.Open(
-                            Path(PATH).joinpath(file_name))
-                    )
-                # =================================================================
-                # prevent that word opens itself
-                # =================================================================
-                    Application.ActiveDocument.ActiveWindow.View.Type = 3
-                    Application.ActiveDocument.SaveAs(
-                        os.path.join(
-                            PATH_EXP, 'compared{:02n}-{}.docx'.format(_, _file_name))
-                    )
-                    Application.Quit()
-                    del Application, Document
-                    os.unlink(Path(PATH_EXP).joinpath(file_name))
+
+                    PATH_CTRL = Path(PATH_EXP).joinpath(file_name)
+                    PATH_TEST = Path(PATH_SRC).joinpath(file_name)
+                    PATH_EXPR = Path(PATH_EXP).joinpath(
+                        f'compared{_:02n}-{_file_name}.docx')
+
+                    docx_compare(PATH_CTRL, PATH_TEST, PATH_EXPR)
+                    os.unlink(PATH_CTRL)
                 except:
                     pass
