@@ -6,7 +6,7 @@ import re
 import zipfile
 
 from core.config import ARCHIVE_NAME, BASE_PATH, PATH_DST
-from core.funcs import docx_compare
+from core.funcs import compare_word_docs
 
 
 def main():
@@ -26,7 +26,7 @@ def main():
                     PATH_EXPR = PATH_DST.joinpath(
                         f'compared{_:02n}-{_file_name}.docx')
 
-                    docx_compare(PATH_CTRL, PATH_TEST, PATH_EXPR)
+                    compare_word_docs(PATH_CTRL, PATH_TEST, PATH_EXPR)
                     os.unlink(PATH_CTRL)
                 except:
                     pass

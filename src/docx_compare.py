@@ -10,7 +10,7 @@ import zipfile
 
 from core.config import (ARCHIVE_NAME, BASE_PATH, DATE, DATE_CTR, DATE_TST,
                          PATH_DST)
-from core.funcs import docx_compare
+from core.funcs import compare_word_docs
 
 name_ctr = f'Meeting Minutes {DATE}.docx'
 name_tst = f'Meeting Minutes {DATE}.docx'
@@ -20,7 +20,7 @@ path_ctr = BASE_PATH.joinpath(name_ctr)
 path_tst = BASE_PATH.joinpath(name_tst)
 path_dst = PATH_DST.joinpath(name_dst)
 
-docx_compare(path_ctr, path_tst, path_dst)
+compare_word_docs(path_ctr, path_tst, path_dst)
 
 # =============================================================================
 # Separate Procedure
@@ -37,4 +37,5 @@ with zipfile.ZipFile(ARCHIVE_NAME) as archive_tst:
 # =============================================================================
 # Separate Procedure
 # =============================================================================
-docx_compare(f'Note INTH12 {DATE_CTR}.docx', f'Note INTH12 {DATE_TST}.docx')
+compare_word_docs(f'Note INTH12 {DATE_CTR}.docx',
+                  f'Note INTH12 {DATE_TST}.docx')
