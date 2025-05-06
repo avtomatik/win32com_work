@@ -30,6 +30,9 @@ def word_app():
 
 
 def compare_word_docs(path_ctr: Path, path_tst: Path, path_dst: Path) -> None:
+    # =========================================================================
+    # TODO: Update Function to Work with Document Instances Directly
+    # =========================================================================
     """
     Compares two Word documents and saves the result.
 
