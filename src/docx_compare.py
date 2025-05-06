@@ -5,36 +5,36 @@ Created on Sun Feb 13 14:40:20 2022
 
 @author: Alexander Mikhailov
 """
+
 import zipfile
 
-from core.config import (ARCHIVE_NAME, BASE_PATH, DATE, DATE_LEFT, DATE_RIGHT,
+from core.config import (ARCHIVE_NAME, BASE_PATH, DATE, DATE_CTR, DATE_TST,
                          PATH_DST)
 from core.funcs import docx_compare
 
-file_control = f'Meeting Minutes {DATE}.docx'
-file_test = f'Meeting Minutes {DATE}.docx'
+name_ctr = f'Meeting Minutes {DATE}.docx'
+name_tst = f'Meeting Minutes {DATE}.docx'
+name_dst = 'compared_docx.docx'
 
-PATH_CTRL = BASE_PATH.joinpath(file_control)
-PATH_TEST = BASE_PATH.joinpath(file_test)
-PATH_EXPR = PATH_DST.joinpath('compared_docx.docx')
+path_ctr = BASE_PATH.joinpath(name_ctr)
+path_tst = BASE_PATH.joinpath(name_tst)
+path_dst = PATH_DST.joinpath(name_dst)
 
-
-docx_compare(PATH_CTRL, PATH_TEST, PATH_EXPR)
-
-# =============================================================================
-# Separate Procedure
-# =============================================================================
-
-
-FILE_NAME = f'Meeting Minutes {DATE}.docx'
-with zipfile.ZipFile(ARCHIVE_NAME) as archive_control:
-    file_control = archive_control.read(FILE_NAME)
-
-
-with zipfile.ZipFile(ARCHIVE_NAME) as archive_test:
-    file_test = archive_test.read(FILE_NAME)
+docx_compare(path_ctr, path_tst, path_dst)
 
 # =============================================================================
 # Separate Procedure
 # =============================================================================
-docx_compare(f'Note INTH12 {DATE_LEFT}.docx', f'Note INTH12 {DATE_RIGHT}.docx')
+file_name = f'Meeting Minutes {DATE}.docx'
+
+with zipfile.ZipFile(ARCHIVE_NAME) as archive_ctr:
+    doc_ctr = archive_ctr.read(file_name)
+
+
+with zipfile.ZipFile(ARCHIVE_NAME) as archive_tst:
+    doc_tst = archive_tst.read(file_name)
+
+# =============================================================================
+# Separate Procedure
+# =============================================================================
+docx_compare(f'Note INTH12 {DATE_CTR}.docx', f'Note INTH12 {DATE_TST}.docx')

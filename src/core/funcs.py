@@ -1,8 +1,10 @@
+from pathlib import Path
+
 from win32com.client.dynamic import Dispatch
 from win32com.client.gencache import EnsureDispatch
 
 
-def docx_compare(PATH_CTRL, PATH_TEST, PATH_EXPR):
+def docx_compare(path_ctr: Path, path_tst: Path, path_dst: Path) -> None:
     # =========================================================================
     # TODO: Implement Context Manager
     # =========================================================================
@@ -10,13 +12,13 @@ def docx_compare(PATH_CTRL, PATH_TEST, PATH_EXPR):
     app = EnsureDispatch(PROG_ID) or Dispatch(PROG_ID)
     Document = app.Documents.Add()
     app.CompareDocuments(
-        app.Documents.Open(PATH_CTRL),
-        app.Documents.Open(PATH_TEST)
+        app.Documents.Open(path_ctr),
+        app.Documents.Open(path_tst)
     )
     # =========================================================================
     # prevent that word opens itself
     # =========================================================================
     app.ActiveDocument.ActiveWindow.View.Type = 3
-    app.ActiveDocument.SaveAs(PATH_EXPR)
+    app.ActiveDocument.SaveAs(path_dst)
     app.Quit()
     del app, Document
