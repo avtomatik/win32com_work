@@ -9,13 +9,18 @@ Created on Tue May  6 17:30:47 2025
 from contextlib import contextmanager
 from pathlib import Path
 
+from win32com.client import Dispatch
 from win32com.client.gencache import EnsureDispatch
+
+from core.config import PASSWORD
 
 
 @contextmanager
 def word_app():
     """Context manager to safely start and close Word application."""
-    app = EnsureDispatch('Word.Application')
+    PROG_ID = 'Word.Application'
+
+    app = EnsureDispatch(PROG_ID)
     app.Visible = False
     try:
         yield app
@@ -43,3 +48,28 @@ def compare_word_docs(path_ctr: Path, path_tst: Path, path_dst: Path) -> None:
         doc_comparison.Close(False)
         doc_tst.Close(False)
         doc_ctr.Close(False)
+
+
+def remove_excel_password(file_path: Path, password: str = PASSWORD) -> None:
+    """Removes the password protection from an Excel file and saves it.
+
+    Args:
+        file_path (Path): Path to the password-protected Excel file.
+        password (str): Password for the Excel file. Default is PASSWORD.
+    """
+    PROG_ID = 'Excel.Application'
+
+    app = EnsureDispatch(PROG_ID) or Dispatch(PROG_ID)
+    app.DisplayAlerts = False
+
+    try:
+        workbook = app.Workbooks.Open(
+            Filename=file_path,
+            UpdateLinks=False,
+            ReadOnly=False,
+            Password=password
+        )
+        workbook.SaveAs(Filename=file_path, Password='', WriteResPassword='')
+        workbook.Close(SaveChanges=True)
+    finally:
+        app.Quit()
